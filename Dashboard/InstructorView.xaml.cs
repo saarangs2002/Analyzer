@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ViewModel;
+using SessionState;
+using System.Collections.ObjectModel;
 
 namespace Dashboard
 {
@@ -26,10 +28,18 @@ namespace Dashboard
         /// <summary>
         /// Constructor for the Entry page.
         /// </summary>
+
+        public ObservableCollection<Student> student;
         public Entry()
         {
             InitializeComponent();
+            student = new ObservableCollection<Student>()
+            {
+                new Student(){Name="Me",Id=1},
 
+                new Student(){Name="You",Id=2}
+            };
+            lstNames.ItemsSource = student;
             try
             {
                 // Create the ViewModel and set as data context.

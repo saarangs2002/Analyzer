@@ -70,7 +70,14 @@
                 <Grid.Background>
                     <SolidColorBrush Color="LightBlue" />
                 </Grid.Background>
-                <TextBlock Text="Messaging" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.562,3.035" />
+                <ListView x:Name="lstNames" Margin="5,5,5,5" Grid.Column="1" Grid.Row="0">
+                    <ListView.View>
+                        <GridView x:Name="grdNames">
+                            <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding Name}" Width="120"/>
+                            <GridViewColumn Header="Id"  DisplayMemberBinding="{Binding Id}" Width="60"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </Grid>
         </Grid>
     </Grid>
