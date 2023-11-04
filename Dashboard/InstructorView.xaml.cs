@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ViewModel;
+using SessionState;
 
 namespace Dashboard
 {
@@ -26,6 +27,9 @@ namespace Dashboard
         /// <summary>
         /// Constructor for the Entry page.
         /// </summary>
+
+        public StudentSessionState? studentSessionStateFromViewModel;  //To access the studentSessionState object from the InstructorViewModel
+
         public Entry()
         {
             InitializeComponent();
@@ -35,6 +39,11 @@ namespace Dashboard
                 // Create the ViewModel and set as data context.
                 InstructorViewModel viewModel = new();
                 DataContext = viewModel;
+
+                studentSessionStateFromViewModel = viewModel.StudentSessionState;   //Assigning view model object to the current object
+
+                lstNames.ItemsSource = studentSessionStateFromViewModel.GetAllStudents();
+
             }
             catch (Exception exception)
             {

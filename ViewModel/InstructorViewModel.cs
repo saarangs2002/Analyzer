@@ -20,6 +20,8 @@ namespace ViewModel
         private readonly ChatMessenger _newConnection; // To communicate between instructor and student used to send and receive chat messages.
         private readonly StudentSessionState _studentSessionState; // To manage the connected studnets
 
+        public StudentSessionState StudentSessionState => _studentSessionState; // Expose the _studentSessionState as a public property
+
         /// <summary>
         /// Constructor for the DashboardViewModel.
         /// </summary>
