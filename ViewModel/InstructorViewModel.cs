@@ -28,6 +28,10 @@ namespace ViewModel
         public InstructorViewModel(ICommunicator? communicator = null)
         {
             _studentSessionState = new();
+
+
+            _studentSessionState.AddStudent(1, "abc", "253", 234);
+                
             _communicator = communicator ?? CommunicatorFactory.CreateCommunicator();
 
             IpAddress = GetPrivateIp();
