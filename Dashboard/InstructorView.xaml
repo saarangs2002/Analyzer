@@ -72,7 +72,7 @@
                     <SolidColorBrush Color="LightBlue" />
                 </Grid.Background>
                 <TextBlock Text="Messaging" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.562,3.035" />-->
-                <DataGrid x:Name="JoinedStudentTable" AutoGenerateColumns="False">
+                <DataGrid x:Name="JoinedStudentTable" AutoGenerateColumns="False" ItemsSource="{Binding JoinedStudents, Mode=OneWay}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
                         <DataGridTextColumn Header="ID" Binding="{Binding Id}" />

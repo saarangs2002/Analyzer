@@ -1,19 +1,17 @@
-﻿using System.Collections.ObjectModel;
-
-namespace SessionState
+﻿namespace SessionState
 {
     public class StudentSessionState
     {
-        private ObservableCollection<Student> students;
+        private List<Student> students;
 
         public StudentSessionState()
         {
-            students = new ObservableCollection<Student>();
+            students = new List<Student>();
         }
 
         public void AddStudent(int id, string name, string ip, int port)
         {
-            var check = students.First(s => s.Id == id);
+            var check = students.Find(s => s.Id == id);
             if (check == null)
             {
                 var student = new Student
@@ -29,14 +27,14 @@ namespace SessionState
 
         public void RemoveStudent(int id)
         {
-            var studentToRemove = students.FirstOrDefault(s => s.Id == id);
+            var studentToRemove = students.Find(s => s.Id == id);
             if (studentToRemove != null)
             {
                 students.Remove(studentToRemove);
             }
         }
 
-        public ObservableCollection<Student> GetAllStudents()
+        public List<Student> GetAllStudents()
         {
             return students;
         }

@@ -45,7 +45,7 @@ namespace ViewModel
                 OnPropertyChanged(nameof(ReceivePort));
             }
             catch { }
-            //_studentSessionState.AddStudent(112001035, "Saarang", "123.1234.44", 1234);
+            _studentSessionState.AddStudent(112001035, "Saarang", "123.1234.44", 1234);
 
             // Update the port that the communicator is listening on.
             //ReceivePort = _communicator.ListenPort.ToString();
@@ -60,16 +60,9 @@ namespace ViewModel
             //};
         }
 
-        public ObservableCollection<Student> JoinedStudents
+        public List<Student> JoinedStudents()
         {
-            get
-            {
-                return _studentSessionState.GetAllStudents();
-            }
-            private set
-            {
-
-            }
+            return _studentSessionState.GetAllStudents();
         }
 
         public ICommunicator Communicator
