@@ -40,7 +40,7 @@ namespace Dashboard
                 ResultPage resultPage = new(viewModel.Communicator);
                 ResultFrame.Content = resultPage;
 
-                //JoinedStudentTable.ItemsSource = viewModel.JoinedStudents;
+                JoinedStudentTable.ItemsSource = viewModel.JoinedStudents;
             }
             catch (Exception exception)
             {

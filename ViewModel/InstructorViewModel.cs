@@ -14,6 +14,7 @@ using System.Net.Mail;
 using Networking.Utils;
 using Networking.Models;
 using System.Xml.Linq;
+using System.Collections.ObjectModel;
 
 namespace ViewModel
 {
@@ -59,7 +60,7 @@ namespace ViewModel
             //};
         }
 
-        public List<Student> JoinedStudents
+        public ObservableCollection<Student> JoinedStudents
         {
             get
             {
