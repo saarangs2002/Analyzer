@@ -72,7 +72,7 @@ namespace ViewModel
                 return server;
             }
 
-            private set 
+            private set
             {
 
             }
