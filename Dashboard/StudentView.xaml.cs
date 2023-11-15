@@ -76,7 +76,6 @@ namespace Dashboard
                 FileUpload fileUpload = new(viewModel.Communicator, StudentRollTextBox.Text);
                 ContentFrame.Content = fileUpload;
             }
-
         }
 
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using Networking.Utils;
 using Networking.Models;
+using System.Xml.Linq;
 
 namespace ViewModel
 {
@@ -23,7 +24,7 @@ namespace ViewModel
         private readonly StudentSessionState _studentSessionState; // To manage the connected studnets
 
         /// <summary>
-        /// Constructor for the DashboardViewModel.
+        /// Constructor for the InstructorViewModel.
         /// </summary>
         public InstructorViewModel(ICommunicator? communicator = null)
         {
@@ -43,10 +44,11 @@ namespace ViewModel
                 OnPropertyChanged(nameof(ReceivePort));
             }
             catch { }
+            //_studentSessionState.AddStudent(112001035, "Saarang", "123.1234.44", 1234);
 
             // Update the port that the communicator is listening on.
             //ReceivePort = _communicator.ListenPort.ToString();
-            
+
 
             // Create an instance of the chat messenger and signup for callback.
             //_newConnection = new(_communicator);
@@ -55,6 +57,18 @@ namespace ViewModel
             //{
             //    AddStudnet(message);
             //};
+        }
+
+        public List<Student> JoinedStudents
+        {
+            get
+            {
+                return _studentSessionState.GetAllStudents();
+            }
+            private set
+            {
+
+            }
         }
 
         public ICommunicator Communicator
@@ -112,9 +126,9 @@ namespace ViewModel
             return null;
         }
 
-        private static string SerializeStudnetInfo(string? name, string? rollNo, string? ip, string? port)
+        private static string SerializeStudnetInfo(string? name, string? rollNo, string? ip, string? port, int connect)
         {
-            return $"{rollNo}|{name}|{ip}|{port}";
+            return $"{rollNo}|{name}|{ip}|{port}|{connect}";
         }
 
         private static (int, string?, string?, int, int) DeserializeStudnetInfo(string data)
@@ -140,7 +154,7 @@ namespace ViewModel
         }
 
         private bool AddStudnet(string serializedStudnet)
-            {
+        {
             Debug.WriteLine($"One message received {serializedStudnet}");
             if (serializedStudnet != null)
             {
@@ -161,7 +175,8 @@ namespace ViewModel
                     {
                         _studentSessionState.RemoveStudent(rollNo);
                         server.Send("0", EventType.ChatMessage(), $"{rollNo}");
-                    }     
+                    }
+                    OnPropertyChanged(nameof(JoinedStudents));
                     return true;
                 }
             }

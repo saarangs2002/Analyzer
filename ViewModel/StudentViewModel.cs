@@ -168,10 +168,10 @@ namespace ViewModel
             return $"{rollNo}|{name}|{ip}|{port}|{connect}";
         }
 
-        private static (int, string?, string?, int) DeserializeStudnetInfo(string data)
+        private static (int, string?, string?, int, int) DeserializeStudnetInfo(string data)
         {
             string[] parts = data.Split('|');
-            if (parts.Length == 4)
+            if (parts.Length == 5)
             {
                 try
                 {
@@ -180,13 +180,14 @@ namespace ViewModel
                         int.Parse(parts[0]),
                         parts[1],
                         parts[2],
-                        int.Parse(parts[3])
+                        int.Parse(parts[3]),
+                        int.Parse(parts[4])
                     );
                 }
                 catch { }
 
             }
-            return (0, null, null, 0);
+            return (0, null, null, 0, 0);
         }
 
         private void HandleMessage(string message)
