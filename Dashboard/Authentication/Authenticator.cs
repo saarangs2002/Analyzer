@@ -233,8 +233,8 @@ namespace Dashboard.Authentication
             stream.Close();
 
             try
-            {
-                // Getting the response     
+            {     
+                // Getting the respons e        
                 WebResponse tokenResponse = await tokenRequest.GetResponseAsync();
 
                 using StreamReader reader = new(tokenResponse.GetResponseStream());
