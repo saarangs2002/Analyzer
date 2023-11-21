@@ -229,12 +229,12 @@ namespace Dashboard.Authentication
             byte[] _byteVersion = Encoding.ASCII.GetBytes(tokenRequestBody);
             tokenRequest.ContentLength = _byteVersion.Length;
             Stream stream = tokenRequest.GetRequestStream();
-            await stream.WriteAsync(_byteVersion, 0, _byteVersion.Length);
+            await stream.WriteAsync(_byteVersion, 0, _byteVersion.Length); 
             stream.Close();
 
             try
             {
-                // Getting the response
+                // Getting the response     
                 WebResponse tokenResponse = await tokenRequest.GetResponseAsync();
 
                 using StreamReader reader = new(tokenResponse.GetResponseStream());
