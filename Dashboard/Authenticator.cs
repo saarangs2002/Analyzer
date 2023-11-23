@@ -30,7 +30,7 @@ namespace Dashboard.Authentication
     /// <summary>
     /// Handles Google OAuth2 authentication.
     /// </summary>
-    public class Authenticator
+    public static class Authenticator
     {
         private static readonly string s_clientId = "311678972089-oro9svmgd6utrgqs5ttugdgslfarp0i6.apps.googleusercontent.com";
         private static readonly string s_clientSecret = "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";
