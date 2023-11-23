@@ -64,9 +64,9 @@ namespace ViewModel
         /// </summary>
         /// 
 
-        private string _isConnected = "false";
+        private bool _isConnected = false;
 
-        public string IsConnected
+        public bool IsConnected
         {
             get
             {
@@ -168,12 +168,12 @@ namespace ViewModel
         {
             if (message == "1")
             {
-                IsConnected = "true";
+                IsConnected = true;
                 Debug.WriteLine("Connected to Instructor");
             }
             else if (message == "0")
             {
-                IsConnected = "false";
+                IsConnected = false;
                 _client.Stop();
                 Debug.WriteLine("Disconnected from Instructor");
             }
