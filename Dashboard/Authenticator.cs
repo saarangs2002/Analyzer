@@ -1,9 +1,12 @@
-﻿/// <credits>
-/// <author>
-/// <name>Prayag Krishna</name>
-/// <rollnumber>112001032</rollnumber>
-/// </author>
-/// </credits>
+﻿/******************************************************************************
+* Filename    = Authenticator.cs
+*
+* Author      = Sushma kamuju
+*
+
+* Description = ViewModel for the Authentication Module which will authorize the app to use client information.
+* 
+*****************************************************************************/
 
 using System;
 using System.Collections.Generic;
@@ -25,9 +28,9 @@ using System.Net.Http;
 namespace Dashboard.Authentication
 {
     /// <summary>
-    /// Provides authentication using Google OAuth2.
+    /// Handles Google OAuth2 authentication.
     /// </summary>
-    public static class Authenticator
+    public class Authenticator
     {
         private static readonly string s_clientId = "311678972089-oro9svmgd6utrgqs5ttugdgslfarp0i6.apps.googleusercontent.com";
         private static readonly string s_clientSecret = "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";
@@ -38,11 +41,11 @@ namespace Dashboard.Authentication
         private static string s_imageName = "";
 
         /// <summary>
-        /// Authenticates a user using Google OAuth2. This method initiates the OAuth2 authentication flow to obtain user credentials for accessing Google services.
+        /// Initiates the Google OAuth2 authentication process to obtain user credentials for accessing Google services.
         /// </summary>
         /// <param name="timeOut">The maximum time (in milliseconds) to wait for the authentication process to complete. The default timeout is 180,000 milliseconds (3 minutes).</param>
         /// <returns>
-        /// A list of strings representing user-specific information. or access tokens. The specific content of the list may vary based on the authentication and authorization flow.
+        /// A list of strings representing user-specific information or access tokens. The content of the list may vary based on the authentication and authorization flow.
         /// </returns>
         public static async Task<AuthenticationResult> Authenticate(int timeOut = 180000)
         {
@@ -161,10 +164,10 @@ namespace Dashboard.Authentication
         }
 
         /// <summary>
-        /// Creating a non-padded base64 URL encoding
+        /// Encodes the input buffer into a non-padded base64 URL format.
         /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns>String: Encoded Base 64</returns>
+        /// <param name="buffer">The byte array to be encoded.</param>
+        /// <returns>A string representing the encoded base64 URL.</returns>
         private static string EncodeInputBuffer(byte[] buffer)
         {
             string base64 = Convert.ToBase64String(buffer);
@@ -177,10 +180,10 @@ namespace Dashboard.Authentication
         }
 
         /// <summary>
-        /// For getting the SHA256 hashing of the inputString
+        /// Computes the SHA256 hash for the input string.
         /// </summary>
-        /// <param name="inputString"></param>
-        /// <returns>Byte Array: Sha256 Hashing</returns>
+        /// <param name="inputString">The input string to be hashed.</param>
+        /// <returns>A byte array representing the SHA256 hash.</returns>
         private static byte[] Sha256(string inputString)
         {
             byte[] bytes = Encoding.ASCII.GetBytes(inputString);
@@ -189,10 +192,11 @@ namespace Dashboard.Authentication
         }
 
         /// <summary>
-        /// Generating a random 32 bit cryptographic number.
+        /// Generates a random cryptographic number of the specified length.
         /// </summary>
-        /// <param name="length"></param>
-        /// <returns>Number in base64 representation.</returns>
+        /// <param name="length">The length of the random number in bytes.</param>
+        /// <returns>A base64-encoded representation of the random cryptographic number.</returns>
+
         private static string CryptRandomInt(uint length)
         {
             byte[] bytes = new byte[length];
@@ -202,11 +206,12 @@ namespace Dashboard.Authentication
         }
 
         /// <summary>
-        /// This function is responsible for connecting to OAuth Client and requesting token to receive Profile Information of User who has authenticated.
+        /// Connects to the OAuth client, requests a token, and retrieves the profile information of the authenticated user.
         /// </summary>
-        /// <param name="code"></param>
-        /// <param name="code_verifier"></param>
-        /// <param name="redirectURI"></param>
+        /// <param name="code">The authorization code received from the OAuth authorization response.</param>
+        /// <param name="code_verifier">The code verifier used for the OAuth PKCE (Proof Key for Code Exchange) flow.</param>
+        /// <param name="redirectURI">The redirect URI used during the OAuth authorization request.</param>
+
         private static async void GetUserData(string code, string code_verifier, string redirectURI)
         {
             Trace.WriteLine("[Authenticator] Getting Data From User");
@@ -263,9 +268,10 @@ namespace Dashboard.Authentication
         }
 
         /// <summary>
-        /// This will finally enable us to use the token to extract the required information
+        /// Uses the access token to extract the required information.
         /// </summary>
-        /// <param name="access_token"></param>
+        /// <param name="access_token">The OAuth access token obtained after successful authentication.</param>
+
         private static async void UserInfoCall(string access_token)
         {
             // Building the  request
