@@ -1,11 +1,23 @@
-﻿using Analyzer;
+﻿/******************************************************************************
+ * Filename    = ContentServerViewModel.cs
+ * 
+ * Author      = Jyothiradithya
+ *
+ * Product     = Analyzer
+ * 
+ * Project     = Content
+ *
+ * Description = Network subscriber for handling client recieve
+ *****************************************************************************/
+using Analyzer;
 using Content.Model;
-using Networking.Communicator;
 using System.ComponentModel;
-using System.Diagnostics;
 
 namespace Content.ViewModel
 {
+    /// <summary>
+    /// Struct holding details about choosable analyzers
+    /// </summary>
     public class AnalyzerConfigOption
     {
         public int AnalyzerId { get; set; }
@@ -24,14 +36,18 @@ namespace Content.ViewModel
         private Tuple<string, List<Tuple<string, int, string>>> _selectedItem;
         private List<string> _uploadedFiles = new();
 
+        /// <summary>
+        /// Property change event
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Initializes Content Server and provides it server and analyzer
         /// </summary>
-        public ContentServerViewModel(ICommunicator server, string sessionID)
+        /// <param name="contentServer">Content Server to be passed</param>
+        public ContentServerViewModel(ContentServer contentServer)
         {
-            _contentServer = new ContentServer(server, AnalyzerFactory.GetAnalyzer(), sessionID);
+            _contentServer = contentServer;
             _contentServer.AnalyzerResultChanged += (result) =>
             {
                 _analyzerResults = result;
@@ -54,28 +70,47 @@ namespace Content.ViewModel
             _analyzerResults = _contentServer.analyzerResult;
         }
 
+        ///-----------Reactor functions-----------------------
+
+        /// <summary>
+        /// Configure Analyzer to the given analyzer
+        /// </summary>
+        /// <param name="teacherOptions">Dictionary of teacher options</param>
         public void ConfigureAnalyzer(IDictionary<int, bool> teacherOptions)
         {
             // Call Analyzer.Configure
             _contentServer.Configure(teacherOptions);
         }
 
+        /// <summary>
+        /// Set the sessionID of the server
+        /// </summary>
+        /// <param name="sessionID"></param>
         public void SetSessionID(string? sessionID)
         {
             _contentServer.SetSessionID(sessionID);
         }
 
+        /// <summary>
+        /// Load custom DLLs into the server
+        /// </summary>
+        /// <param name="filePaths">paths to the custom analyzer DLLs</param>
         public void LoadCustomDLLs(List<string> filePaths)
         {
             _contentServer.LoadCustomDLLs(filePaths);
             _uploadedFiles = filePaths;
             OnPropertyChanged(nameof(UploadedFiles));
         }
-
+        
+        /// <summary>
+        /// Summarise data and send to cloud from server
+        /// </summary>
         public void SendToCloud()
         {
             _contentServer.SendToCloud();
         }
+
+        /// ------------MVVM bindings--------------
 
         /// <summary>
         /// Analysis result
@@ -112,6 +147,9 @@ namespace Content.ViewModel
 
         }
 
+        /// <summary>
+        /// Tab bindings
+        /// </summary>
         public Tuple<string, List<Tuple<string, int, string>>> SelectedItem
         {
             get => _selectedItem;
@@ -122,17 +160,19 @@ namespace Content.ViewModel
             }
         }
 
+        /// <summary>
+        /// Selectable list of configuration options
+        /// </summary>
         public List<AnalyzerConfigOption> ConfigOptionsList
         {
             get { return _configOptionsList; }
             set { _configOptionsList = value; OnPropertyChanged(nameof(ConfigOptionsList)); }
         }
 
-
-        public string UploadedFiles
-        {
-            get { return string.Join(",", _uploadedFiles);  }
-        }
+        /// <summary>
+        /// Binding to show which all files are uploaded
+        /// </summary>
+        public string UploadedFiles => string.Join( "," , _uploadedFiles );
 
         private void OnPropertyChanged(string propertyName)
         {

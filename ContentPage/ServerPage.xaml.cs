@@ -1,8 +1,24 @@
-﻿using System.Windows.Controls;
+﻿/******************************************************************************
+ * Filename    = ServerPage.xaml.cs
+ * 
+ * Author      = Sreelakshmi
+ *
+ * Product     = Analyser
+ * 
+ * Project     = ContentPage
+ *
+ * Description = This file contains the code-behind for the ServerPage.xaml.
+ *             
+ *****************************************************************************/
+
+using System.Windows.Controls;
 using Content.ViewModel;
 using Networking.Communicator;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using Analyzer;
+using Content.Model;
+using System.Diagnostics; 
 
 namespace ContentPage
 {
@@ -18,10 +34,15 @@ namespace ContentPage
         /// Refer <see cref="SetSessionID"/> on how to change result to each client's
         /// </summary>
         /// <param name="server">Running networking server</param>
+        /// <param name="sessionID">Unique ID of server</param>
         public ServerPage(ICommunicator server, string sessionID)
         {
+            Trace.WriteLine( "Initializing ServerPage" );
+
             InitializeComponent();
-            _viewModel = new ContentServerViewModel(server, sessionID);
+            _viewModel = new ContentServerViewModel(
+                new ContentServer( server, AnalyzerFactory.GetAnalyzer(), sessionID )
+                );
             DataContext = _viewModel;
 
             LoadResultPage(); // Load ResultPage initially
@@ -36,29 +57,46 @@ namespace ContentPage
         /// <param name="sessionID">Session ID or Client ID</param>
         public void SetSessionID(string sessionID)
         {
+            Trace.WriteLine( $"Setting session ID: {sessionID}" );
+
             _viewModel.SetSessionID(sessionID);
         }
 
-       
+        /// <summary>
+        /// Loads the ResultPage into the ResultFrame.
+        /// </summary>
         private void LoadResultPage()
         {
+            Trace.WriteLine( "Loading ResultPage" );
+
             ResultPage resultPage = new (_viewModel);
             ResultFrame.NavigationService.Navigate(resultPage);
             
         }
-
+        /// <summary>
+        /// Loads the ConfigurationPage into the ConfigFrame.
+        /// </summary>
         private void LoadConfigurationPage()
         {
+            Trace.WriteLine( "Loading ConfigurationPage" );
+
             ConfigurationPage configPage = new (_viewModel);
             ConfigFrame.NavigationService.Navigate(configPage);
             
         }
 
+        /// <summary>
+        /// Event handler for the AnalyzerUploadButton click. Allows uploading DLL files for analysis.
+        /// </summary>
         private void AnalyzerUploadButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true; // Allow multiple file selection
-            openFileDialog.Filter = "DLL files (*.dll)|*.dll|All files (*.*)|*.*"; // Filter for DLL files
+            Trace.WriteLine( "AnalyzerUploadButton Click" );
+
+            OpenFileDialog openFileDialog = new()
+            {
+                Multiselect = true , // Allow multiple file selection
+                Filter = "DLL files (*.dll)|*.dll|All files (*.*)|*.*" // Filter for DLL files
+            };
 
             // Show the dialog and get the result
             DialogResult result = openFileDialog.ShowDialog();
@@ -66,14 +104,21 @@ namespace ContentPage
             // Process the selected files
             if (result == DialogResult.OK)
             {
-                List<string> filePaths = new List<string>(openFileDialog.FileNames);
+                List<string> filePaths = new (openFileDialog.FileNames);
                 _viewModel.LoadCustomDLLs(filePaths);
+
+                Trace.WriteLine( "Custom DLLs loaded" );
 
             }
         }
 
+        /// <summary>
+        /// Event handler for the SendToCloudButton click. Initiates sending data to the cloud.
+        /// </summary>
         private void SendToCloudButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            Trace.WriteLine( "SendToCloudButton Click" );
+
             _viewModel.SendToCloud();
         }
     }

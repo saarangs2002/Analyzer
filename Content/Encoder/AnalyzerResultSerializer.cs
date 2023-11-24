@@ -11,6 +11,7 @@
 *****************************************************************************/
 using Analyzer;
 using Networking.Serialization;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace Content.Encoder
@@ -23,6 +24,7 @@ namespace Content.Encoder
     {
         public string Serialize<T>(T genericObject)
         {
+            Trace.WriteLine( "[Content][AnalyzerResultSerializer.cs] : Seriailize" );
             if (genericObject == null)
             {
                 throw new ArgumentNullException(nameof(genericObject));
@@ -31,7 +33,7 @@ namespace Content.Encoder
             else if (genericObject.GetType() == typeof(AnalyzerResult))
             {
                 var analyzerResult = genericObject as AnalyzerResult;
-                string serializedAnalyzerResult = $"AnalyzerID:{analyzerResult.AnalyserID}||\nVerdict:{analyzerResult.Verdict}||\nErrorMessage:{analyzerResult.ErrorMessage}\n";
+                string serializedAnalyzerResult = $"AnalyzerID&:{analyzerResult.AnalyserID}||\nVerdict&:{analyzerResult.Verdict}||\nErrorMessage&:{analyzerResult.ErrorMessage}\n";
 
                 return serializedAnalyzerResult;
             }
@@ -59,6 +61,7 @@ namespace Content.Encoder
         }
         private T DeserializeAnalyzerResult<T>(string serializedString)
         {
+            Trace.WriteLine( "[Content][AnalyzerResultSerializer.cs] : DeserializeAnalyzerResult" );
             // Implement custom deserialization logic for AnalyzerResult
             string[] lines = serializedString.Split("||\n", StringSplitOptions.RemoveEmptyEntries);
 
@@ -68,7 +71,7 @@ namespace Content.Encoder
 
             foreach (string line in lines)
             {
-                string[] parts = line.Split( ":" , StringSplitOptions.RemoveEmptyEntries );
+                string[] parts = line.Split( "&:" , StringSplitOptions.RemoveEmptyEntries );
                 if (parts.Length == 2)
                 {
                     string propertyName = parts[0].Trim();
@@ -99,6 +102,7 @@ namespace Content.Encoder
         }
         public T Deserialize<T>(string serializedString)
         {
+            Trace.WriteLine( "[Content][AnalyzerResultSerializer.cs] : Deserialize" );
             if (string.IsNullOrWhiteSpace(serializedString))
             {
                 throw new ArgumentException("Serialized string is null or empty.", nameof(serializedString));

@@ -19,7 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD:DashboardViewModelUnitTests/DashboardViewModelUnitTests.csproj
     <ProjectReference Include="..\Dashboard\Dashboard.csproj" />
+=======
+    <ProjectReference Include="..\SessionState\SessionState.csproj" />
+>>>>>>> 1ac98df4c16c72acb4ad42cb25998ec60ae44909:DashboardUnitTests/DashboardUnitTests.csproj
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
   </ItemGroup>
 

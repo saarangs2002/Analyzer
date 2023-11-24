@@ -34,6 +34,7 @@ namespace ContentPage
         /// <param name="client">client view model</param>
         public FileUpload(ContentClientViewModel client)
         {
+            Trace.WriteLine( "Initializing FileUpload" );
             _client = client;
             InitializeComponent();
         }
@@ -48,11 +49,7 @@ namespace ContentPage
         {
             try
             {
-                //Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
-                //openFileDialog.Filter = "All files (*.*)|*.*|Dynamic Link Libraries (*.dll)|*.dll";
-                //openFileDialog.Multiselect = false; // Set to true if you want to allow multiple file selection
-
-                //System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+                
                 OpenFileDialog ofd = new()
                 {
                     CheckFileExists = false
@@ -64,7 +61,7 @@ namespace ContentPage
                 if (result == DialogResult.OK)
                 {
                     string folderPath = ofd.FileName;
-                    Trace.WriteLine(folderPath);
+                    Trace.WriteLine( $"Selected folder path: {folderPath}" );
                     // Pass folder path to Content Client
                     if (Directory.Exists(folderPath.Substring(0, folderPath.Length - 12)))
                     {
@@ -75,19 +72,14 @@ namespace ContentPage
                         _client.HandleUpload(folderPath);
                     }
                 }
-                //bool isFolderSelected = false;
-                //string selectedPath = null;
+                
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
             }
 
-
         }
-
-
-
 
     }
 }

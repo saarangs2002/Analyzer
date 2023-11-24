@@ -4,8 +4,12 @@
              xmlns:local="clr-namespace:Dashboard"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+<<<<<<< HEAD
 
         <Style x:Key="TitleText" TargetType="TextBlock">
+=======
+         <Style x:Key="TitleText" TargetType="TextBlock">
+>>>>>>> 1ac98df4c16c72acb4ad42cb25998ec60ae44909
             <Setter Property="FontSize" Value="36" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="TextAlignment" Value="Center" />

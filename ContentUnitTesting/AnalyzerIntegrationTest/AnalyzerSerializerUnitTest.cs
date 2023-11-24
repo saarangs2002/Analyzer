@@ -21,18 +21,31 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
     [TestClass]
     public class AnalyzerSerializerUnitTest
     {
+        /// <summary>
+        /// Generates a dictionary representing file analysis results based on provided file paths and analyzer result details.
+        /// </summary>
+        /// <param name="filePaths">A list of file paths associated with the analysis results.</param>
+        /// <param name="analyzerResultDetails">
+        /// A nested list structure containing analyzer result details for each file, where each inner list represents an individual analysis entry
+        /// with the elements [Analyser ID, Verdict, ErrorMessage].
+        /// </param>
+        /// <returns>A dictionary mapping file paths to lists of AnalyzerResult objects.</returns>
+        /// <exception cref="Exception">Thrown when the number of file paths and analyzer result details do not match.</exception>
+
         private Dictionary<string, List<AnalyzerResult>> GenerateFileAnalysisDict(List<string> filePaths, List<List<List<object>>> analyzerResultDetails)
         {
-            Dictionary<string, List<AnalyzerResult>> fileAnalysisDict = new Dictionary<string, List<AnalyzerResult>>();
+            Dictionary<string , List<AnalyzerResult>> fileAnalysisDict = new();
 
             if (filePaths.Count != analyzerResultDetails.Count)
+            {
                 throw new Exception("Invalid");
+            }
 
             for (int i = 0; i < filePaths.Count; i++)
             {
                 string filePath = filePaths[i];
                 List<List<object>> sampleList = analyzerResultDetails[i];
-                List<AnalyzerResult> fileAnalysisList = new List<AnalyzerResult>();
+                List<AnalyzerResult> fileAnalysisList = new();
 
                 foreach (List<object> entry in sampleList)
                 {
@@ -41,7 +54,7 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
                     string errorMessage = (string)entry[2];
 
                     // Create AnalyzerObject
-                    AnalyzerResult analyzerObject = new AnalyzerResult(analyserId, verdict, errorMessage);
+                    AnalyzerResult analyzerObject = new (analyserId, verdict, errorMessage);
                     fileAnalysisList.Add(analyzerObject);
                 }
                 fileAnalysisDict[filePath] = fileAnalysisList;
@@ -50,21 +63,24 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
             return fileAnalysisDict;
         }
 
+        /// <summary>
+        /// Test case to ensure proper serialization and deserialization of analyzer results.
+        /// </summary>
         [TestMethod]
         public void TestAnalyzerSerialization()
         {
-            List<string> filePaths = new List<string> { "root/folder1/file2.dll", "root/folder2/file4.dll" };
+            List<string> filePaths = new() { "root/folder1/file2.dll", "root/folder2/file4.dll" };
 
-            List<List<object>> sampleList1 = new List<List<object>>
+            List<List<object>> sampleList1 = new()  
             {
                 new List<object> { "abc123", 1, "No errors" },
                 new List<object> { "xyz456", 0, "Invalid input" },
                 new List<object> { "123def", 2, "Internal server error" },
-                new List<object> { "qwe789", 1, "File not found" }
+                new List<object> { "qwe789", 1, "File not found : File 1" }
                 // Add more entries as needed
             };
 
-            List<List<object>> sampleList2 = new List<List<object>>
+            List<List<object>> sampleList2 = new()
             {
                 new List<object> { "ghi987", 2, "Permission denied" },
                 new List<object> { "jkl012", 0, "Success" },
@@ -73,15 +89,17 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
                 // Add more entries as needed
             };
 
-            List<List<List<object>>> analyzerResultDetails = new List<List<List<object>>>();
-            analyzerResultDetails.Add(sampleList1);
-            analyzerResultDetails.Add(sampleList2);
+            List<List<List<object>>> analyzerResultDetails = new()
+            {
+                sampleList1 ,
+                sampleList2
+            };
 
             Assert.AreEqual(filePaths.Count, analyzerResultDetails.Count);
 
-            var fileAnalysisDict = GenerateFileAnalysisDict(filePaths, analyzerResultDetails);
+            Dictionary<string , List<AnalyzerResult>> fileAnalysisDict = GenerateFileAnalysisDict( filePaths , analyzerResultDetails );
 
-            AnalyzerResultSerializer analyserSerializer = new AnalyzerResultSerializer();
+            AnalyzerResultSerializer analyserSerializer = new();
 
             // Act
             string serializedData = analyserSerializer.Serialize(fileAnalysisDict);
@@ -90,7 +108,7 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
             // Assert
             Assert.AreEqual(fileAnalysisDict.Count, deserializedResult.Count);
 
-            foreach (var key in fileAnalysisDict.Keys)
+            foreach (string key in fileAnalysisDict.Keys)
             {
                 Assert.IsTrue(deserializedResult.ContainsKey(key), $"Key '{key}' not found in deserialized result");
                 
@@ -98,13 +116,16 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
             }
         }
 
+        /// <summary>
+        /// Test case to validate that an exception is thrown when the number of file paths and analyzer result details does not match.
+        /// </summary>
         [TestMethod]
         public void TestException()
         {
             // Arrange
-            List<string> filePaths = new List<string> { "root/folder1/file2.dll", "root/folder2/file4.dll", "root/folder3/file6.dll" };
+            List<string> filePaths = new() { "root/folder1/file2.dll", "root/folder2/file4.dll", "root/folder3/file6.dll" };
 
-            List<List<object>> sampleList1 = new List<List<object>>
+            List<List<object>> sampleList1 = new()
             {
                 new List<object> { "abc123", 1, "No errors" },
                 new List<object> { "xyz456", 0, "Invalid input" },
@@ -113,28 +134,37 @@ namespace ContentUnitTesting.AnalyzerIntegrationTest
 
             };
 
-            List<List<List<object>>> analyzerResultDetails = new List<List<List<object>>>();
-            analyzerResultDetails.Add(sampleList1);
+            List<List<List<object>>> analyzerResultDetails = new()
+            {
+                sampleList1
+            };
 
             // Act and Assert
             Assert.ThrowsException<Exception>(() => GenerateFileAnalysisDict(filePaths, analyzerResultDetails));
 
         }
+
+        /// <summary>
+        /// Test case to verify that an ArgumentNullException is thrown when attempting to serialize a null object.
+        /// </summary>
         [TestMethod]
         public void Serialize_NullObject_ThrowsArgumentNullException()
         {
             // Arrange
-            AnalyzerResultSerializer serializer = new AnalyzerResultSerializer();
+            AnalyzerResultSerializer serializer = new();
 
             // Act and Assert
             Assert.ThrowsException<ArgumentNullException>(() => serializer.Serialize<AnalyzerResult>(null));
         }
 
+        /// <summary>
+        /// Test case to verify that ArgumentException is thrown when attempting to deserialize a null or whitespace serialized string.
+        /// </summary>
         [TestMethod]
         public void Serialize_NullOrWhiteSpaceSerializedString_ThrowsArgumentException()
         {
             // Arrange
-            AnalyzerResultSerializer serializer = new AnalyzerResultSerializer();
+            AnalyzerResultSerializer serializer = new ();
 
             // Act and Assert
             Assert.ThrowsException<ArgumentException>(() => serializer.Deserialize<Dictionary<string, List<AnalyzerResult>>>(null));
